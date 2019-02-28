@@ -1,4 +1,6 @@
-my_file = open(r"C:\Users\wasil\OneDrive\Desktop\Python\counttext.txt", "r", encoding="utf-8")
+# Add your file name here
+
+my_file = open(r"counttext.txt", "r", encoding="utf-8")
 
 
 # Read the file and save it in a string
