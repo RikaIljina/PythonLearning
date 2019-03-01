@@ -47,7 +47,7 @@ def make_word_list(file):
     file_contents_list = file_contents_upd.split()
     # print(file_contents_list)
 
-    return file_contents_list
+    return file_contents_list, len(file_contents_list)
 
 
 # This function creates a dictionary and reads the list word by word.
@@ -65,11 +65,12 @@ def count_words(w_list):
 
 # This function sorts the dict by most used word and alphabetically, calculates the percentage for each word
 # and appends an f-string formatted line to a comma separated csv file.
-def show_result(w_dict):
+def show_result(w_dict, w_count):
     sorted_list_by_usage = [(k, w_dict[k]) for k in sorted(w_dict, key=w_dict.get, reverse=True)]
     sorted_list_alphab = [(k, w_dict[k]) for k in sorted(w_dict.keys())]
     result_file.write(f"sep=,\n")
-    result_file.write(f"Analysed file: {f_name} \n")
+    result_file.write(f"Analysed file: {f_name}\n")
+    result_file.write(f"Unique words: {len(sorted_list_alphab)}, Total words: {w_count}\n\n")
     result_file.write(f"Words by usage,Percentage,Amount,Words alphabetically,Percentage,Amount\n")
     plural_s = "s"
     for el in range(0, len(sorted_list_by_usage)):
@@ -82,11 +83,11 @@ def show_result(w_dict):
                           f"usage{plural_s if sorted_list_alphab[el][1] > 1 else ''}\n")
 
 
-# word_list = make_word_list(my_file)
-# word_dict = count_words(word_list)
+word_list, words_total = make_word_list(my_file)
+# word_dict = count_words(make_word_list(my_file))
 
 print(f"...Creating the result file {r_name} from {f_name}")
-show_result(count_words(make_word_list(my_file)))
+show_result(count_words(word_list), words_total)
 print("...File created. Press enter to finish.")
 
 input()
