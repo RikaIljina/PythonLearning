@@ -21,6 +21,7 @@ try:
     my_file = open(file_path, "r", encoding="iso-8859-1")
 except:
     print("\nCouldn't open source file counttext.txt. Place it in the same directory as this script.\n")
+    input()
     sys.exit("Aborting script...")
 
 # Deleting old result file if it exists
