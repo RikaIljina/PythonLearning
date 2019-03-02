@@ -40,7 +40,7 @@ result_file = open(r"result.csv", "a+", encoding="iso-8859-1")
 # converts all characters to lowercase and splits the string into a list containing all words.
 def make_word_list(file):
     file_contents = file.read()
-    file_contents_upd = "".join(c for c in file_contents if c not in "\"\t\\/'_;{}‘’“”[]()?:!.,—-*1234567890")
+    file_contents_upd = "".join(c for c in file_contents if c not in "\"\t\\/'_;{}“”‘’“”«»[]()?:!.,—-–=<>*123y4567890§$%&#+|")
     file_contents_upd = file_contents_upd.replace("\n", " ")
     # print(file_contents_upd)
     file_contents_upd = file_contents_upd.lower()
@@ -74,12 +74,12 @@ def show_result(w_dict, w_count):
     result_file.write(f"Words by usage,Percentage,Amount,Words alphabetically,Percentage,Amount\n")
     plural_s = "s"
     for el in range(0, len(sorted_list_by_usage)):
-        prc_1 = 100 * int(sorted_list_by_usage[el][1]) / len(sorted_list_by_usage)
-        prc_2 = 100 * int(sorted_list_alphab[el][1]) / len(sorted_list_alphab)
+        prc_1 = 100 * int(sorted_list_by_usage[el][1]) / w_count
+        prc_2 = 100 * int(sorted_list_alphab[el][1]) / w_count
         # print(f"{sorted_list_by_usage[el][0]} : {prc_1:.2f}%")
-        result_file.write(f"{sorted_list_by_usage[el][0]},{prc_1:.2f}%,{sorted_list_by_usage[el][1]} "
+        result_file.write(f"{sorted_list_by_usage[el][0]},{prc_1:.3f}%,{sorted_list_by_usage[el][1]} "
                           f"usage{plural_s if sorted_list_by_usage[el][1] > 1 else ''},"
-                          f"{sorted_list_alphab[el][0]},{prc_2:.2f}%,{sorted_list_alphab[el][1]} "
+                          f"{sorted_list_alphab[el][0]},{prc_2:.3f}%,{sorted_list_alphab[el][1]} "
                           f"usage{plural_s if sorted_list_alphab[el][1] > 1 else ''}\n")
 
 
