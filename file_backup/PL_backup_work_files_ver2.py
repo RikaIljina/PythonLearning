@@ -7,8 +7,6 @@ import zipfile
 # file with all folders that need backup
 file_with_backup_folders = (r'backup_folders.txt')
 
-all_files_in_backup = []  # TODO: save all files in backup in a list to check if any have been deleted
-
 
 # TODO: make sure there's enough space on the disk before backup
 # open the file with all folders that need backup and save them in a list
@@ -24,7 +22,10 @@ def create_dir_lists():
             return True, backup_list
     else:
         with open(file_with_backup_folders, 'w+') as bf:
-            bf.write('######')
+            bf.write(
+                '###### Put the folder where the backup should be saved below. It must be empty!\nZ:\\MyBackupFolder\n'
+                '###### Put all the folders to be backed up below, one folder per line. Subfolders will also be'
+                ' included in the backup.\nZ:\\MyWorkFiles')
         return False, []
 
 
