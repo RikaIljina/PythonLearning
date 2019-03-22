@@ -41,7 +41,7 @@ exceeding that might cause some issues. The log might also consume too much spac
 It is also supposed to be a desktop application with a neat GUI and a drag&drop functionality,
 and it will be once I've learned how to work with PyQt :smile:
 
-###TODO:
+##TODO:
 - [ ] Check for free disk space
 - [ ] Check for all possible errors, such as wrong file formatting
 - [ ] Consider saving the hash in *files_in_backup* instead of creating individual files
