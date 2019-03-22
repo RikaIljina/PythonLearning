@@ -3,9 +3,13 @@ from os import walk
 import hashlib
 from zipfile import ZipFile
 import zipfile
+import datetime
+import re
 
 # file with all folders that need backup
-file_with_backup_folders = (r'backup_folders.txt')
+file_with_backup_folders = r'backup_folders.txt'
+log_file = r'backup_log.txt'
+log_list = []
 
 
 # TODO: make sure there's enough space on the disk before backup
@@ -54,9 +58,12 @@ def compare_hash(filename, hashfile):
         with open(hashfile, 'r') as hm:
             old_hash = hm.read()
             if old_hash != new_hash:
-                print(f"file changed! {new_hash} {old_hash}")
+                log_list.append(f'+++ CHANGED: {filename} has changed: old hash: {old_hash} '
+                                f'new hash: {new_hash} +++\n\n')
                 return True, new_hash
             else:
+                log_list.append(f'--- NOT changed: {filename} has not changed: old hash: {old_hash} '
+                                f'new hash: {new_hash} ---\n\n')
                 return False, new_hash
     else:
         return True, new_hash
@@ -75,7 +82,8 @@ def update_backup(b_dir, h_file, f_hash, f_target, f_source):
     compression = zipfile.ZIP_DEFLATED
     with ZipFile((f_target + '.zip'), 'w') as current_zip:
         current_zip.write(f_source, os.path.basename(f_target), compress_type=compression)
-        print(f'Created new backup of {f_source}')
+        print(f'\nCreated new backup of {f_source}\n')
+        log_list.append(f'Created new backup of {f_source} at {f_target}.zip\n\n\n')
 
 
 # TODO: prompt user if she wants to add a new file location to the backup_list
@@ -83,7 +91,7 @@ def update_backup(b_dir, h_file, f_hash, f_target, f_source):
 # Compare the previous backup to the current one and check if files have been deleted
 # from the source location. Ask if the respective backup files should be deleted, too.
 def compare_backups(new_backup_list):
-    print(new_backup_list)
+    # print(new_backup_list)
     files_in_backup = 'files_in_backup.txt'
     ghost_files = []
     if os.path.exists(files_in_backup):
@@ -92,23 +100,55 @@ def compare_backups(new_backup_list):
             old_files.remove('')
         for i in range(0, len(old_files), 2):
             file = old_files[i]
-            print(file)
+            # print(file)
             if file not in new_backup_list:
                 print(
-                    f'{file} is not in the original location anymore. Delete {old_files[i + 1]}.zip and hash?? y/n \n')
+                    f'{file} is not in the original location anymore. Delete {old_files[i + 1]}.zip and hash? y/n \n')
                 inp = input()
                 if inp == 'y' or inp == 'Y':
                     os.remove(old_files[i + 1] + '.zip')
                     os.remove(old_files[i + 1] + '.hash.txt')
+                    log_list.append(f'\n### Deleted: {old_files[i + 1]}.zip and hash because source file has been '
+                                    f'deleted. ###\n')
                 else:
                     ghost_files.append(file)
                     ghost_files.append(old_files[i + 1])
+                    log_list.append(f'\n### Still in backup: {old_files[i + 1]}.zip and hash, but source file does not '
+                                    f'exist. ###\n')
+        log_list.append(f'\n### A list of all files currently in backup is here: {files_in_backup} ###\n')
 
     with open(files_in_backup, 'w+', encoding='utf-8') as fib:
         if ghost_files:
             new_backup_list.extend(ghost_files)
         for el in new_backup_list:
             fib.write(el + '\n')
+
+
+def create_log():
+
+    if os.path.exists(log_file):
+        with open(log_file, 'r+', encoding='utf-8') as log:
+            old_log = log.read()
+            temp_log = ''
+            st = re.compile('#######')
+            en = re.compile('END #######')
+            m_st = st.search(old_log)
+            m_en = en.search(old_log)
+            start_i = m_st.start()
+            end_i = m_en.end()
+            for i in range(start_i, end_i):
+                temp_log += old_log[i]
+
+    with open(log_file, 'w+', encoding='utf-8') as log:
+        now = datetime.datetime.now()
+        log.write(f'####### {now} #######\n\n')
+        for el in log_list:
+            log.write(el)
+        log.write(f'\n\n####### END #######\n\n')
+        log.write(temp_log)
+
+    print(f'Log created\n')
+    print(f'{(int(os.path.getsize(log_file)) / 1024):.2f} KB ')
 
 
 def main():
@@ -124,19 +164,20 @@ def main():
     backup_path = backup_list[0]
     current_backup_list = []
     print(f'\nBackup location: {backup_path}\n')
+    log_list.append(f'\nBackup location: {backup_path}\n')
     backup_list.pop(0)
     print(f'\nBackup list: {backup_list}\n')
+    log_list.append(f'\nBackup list: \n')
+    for el in backup_list:
+        log_list.append(f' {el}\n')
+    log_list.append('\n\n')
 
     for backup_location in backup_list:
 
-        current_files = []
-        current_dirs = []
-        current_path = ''
         paths = []
 
         for (dirpath, dirnames, filenames) in walk(backup_location):
             current_files = filenames  # all files in this directory
-            current_dirs = dirnames  # all folders in this directory
             paths.append(dirpath)  # path we're currently in
 
             for file in current_files:
@@ -146,8 +187,8 @@ def main():
                 hashfile_name = os.path.join(backup_path, dirpath.replace(':', '', 1),
                                              (file + '.hash.txt'))
 
-                #   print(
-                #       f'Backup of {file} from {file_for_backup} \n to {backup_dir} as {file_target} \n hash file {hashfile_name}')
+                log_list.append(f'Backup of {file} \n from {file_for_backup} \n to {backup_dir} \n as {file_target}.zip'
+                                f'\n\n hash file {hashfile_name}\n\n')
 
                 current_backup_list.append(file_for_backup)
                 current_backup_list.append(file_target)
@@ -156,14 +197,12 @@ def main():
 
                 hasChanged, new_hash = compare_hash(file_for_backup, hashfile_name)
 
-                #    print(f'{file} has changed: {hasChanged}  {new_hash}')
-
                 if hasChanged:
-                    # input('backup? ')
                     update_backup(backup_dir, hashfile_name, filehash, file_target, file_for_backup)
 
-    print(current_backup_list)
     compare_backups(current_backup_list)
+    print(f'Creating log at {log_file}...\n')
+    create_log()
 
 
 if __name__ == "__main__":
