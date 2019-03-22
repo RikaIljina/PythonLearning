@@ -76,7 +76,7 @@ def update_backup(b_dir, h_file, f_hash, f_target, f_source):
         except FileExistsError:
             # directory already exists
             pass
-    with open(h_file, 'w+') as this_hash:  # TODO: call function update_hash
+    with open(h_file, 'w+') as this_hash:
         this_hash.write(f_hash)
 
     compression = zipfile.ZIP_DEFLATED
@@ -100,7 +100,6 @@ def compare_backups(new_backup_list):
             old_files.remove('')
         for i in range(0, len(old_files), 2):
             file = old_files[i]
-            # print(file)
             if file not in new_backup_list:
                 print(
                     f'{file} is not in the original location anymore. Delete {old_files[i + 1]}.zip and hash? y/n \n')
@@ -115,13 +114,13 @@ def compare_backups(new_backup_list):
                     ghost_files.append(old_files[i + 1])
                     log_list.append(f'\n### Still in backup: {old_files[i + 1]}.zip and hash, but source file does not '
                                     f'exist. ###\n')
-        log_list.append(f'\n### A list of all files currently in backup is here: {files_in_backup} ###\n')
 
     with open(files_in_backup, 'w+', encoding='utf-8') as fib:
         if ghost_files:
             new_backup_list.extend(ghost_files)
         for el in new_backup_list:
             fib.write(el + '\n')
+        log_list.append(f'\n### A list of all files currently in backup is here: {files_in_backup} ###\n')
 
 
 def create_log():
@@ -193,12 +192,10 @@ def main():
                 current_backup_list.append(file_for_backup)
                 current_backup_list.append(file_target)
 
-                filehash = calculate_hash(file_for_backup)
-
                 hasChanged, new_hash = compare_hash(file_for_backup, hashfile_name)
 
                 if hasChanged:
-                    update_backup(backup_dir, hashfile_name, filehash, file_target, file_for_backup)
+                    update_backup(backup_dir, hashfile_name, new_hash, file_target, file_for_backup)
 
     compare_backups(current_backup_list)
     print(f'Creating log at {log_file}...\n')
