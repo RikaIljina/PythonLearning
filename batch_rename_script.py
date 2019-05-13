@@ -53,8 +53,8 @@ class Menu:
             'h': show_help,
             'b': self.run_lvl3,
             'q': exit_menu
-        }                                               # TODO: make help menu for regex
-
+        }
+        
     def run(self, *args):
         while True:
             print(self.texts_lvl1)
