@@ -2,7 +2,7 @@
 ### using PyQt5 GUI
 ------------------------
 
-This project is my first attemt at a Python app with a proper GUI.
+This project is my first attempt at a Python app with a proper GUI.
 
 This also contains my first, simple web crawler.
 
