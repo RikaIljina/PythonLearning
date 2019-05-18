@@ -11,6 +11,10 @@
 *.dll
 *.dylib
 *.ui
+*.pro
+*.cpp
+*.h
+
 
 # Qt-es
 object_script.*.Release
