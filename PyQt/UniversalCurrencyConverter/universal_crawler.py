@@ -1,10 +1,5 @@
 import requests
-import os
 from bs4 import BeautifulSoup
-import re
-from datetime import datetime
-import time
-import csv
 
 
 class Crawler:
