@@ -92,7 +92,7 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.pushButton.setText(_translate("MainWindow", "Crawl latest rate"))
+        self.pushButton.setText(_translate("MainWindow", "Crawl latest rates"))
         self.label_info.setText(_translate("MainWindow", "No rates available"))
         self.label.setText(_translate("MainWindow", "Choose a currency:"))
         self.label_eur.setText(_translate("MainWindow", "EUR"))
