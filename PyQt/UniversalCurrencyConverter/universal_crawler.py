@@ -6,6 +6,7 @@ from datetime import datetime
 import time
 import csv
 
+
 class Crawler:
     def __init__(self):
         self.url_template = 'https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/' \
@@ -33,22 +34,26 @@ class Crawler:
         data = requests.get(self.daily)
         print(data.status_code)
         xml_file = BeautifulSoup(data.text, 'xml')
-        #for child in xml_file.children:
-        #print(str(xml_file).replace(':', ' '))
-        #xml_file = BeautifulSoup(xml_file, 'lxml')
-        #print(xml_file)
-        for r in xml_file.findAll('Cube'):
-            if r.get('currency'):
-                print(r)
-                self.all_rates.append((r['currency'], r['rate']))
-                self.currency_set.add(r['currency'])
-            elif r.get('time'):
-                print(r)
-                self.last_date = r['time']
-        #all_rates = [(r['currency'], r['rate']) for r in xml_file]
+
+        all_cubes = xml_file.find('gesmes:Envelope')
+        print(all_cubes.Cube.Cube['time'])
+
+        for e in all_cubes.Cube.Cube.findAll('Cube'):
+            print(type(e))
+            print(e['currency'])
+
+        for entry in xml_file.findAll('Cube'):
+            if entry.get('currency'):
+                print(entry)
+                self.all_rates.append((entry['currency'], entry['rate']))
+                self.currency_set.add(entry['currency'])
+            elif entry.get('time'):
+                print(entry)
+                self.last_date = entry['time']
+
         print(self.all_rates)
         self.currency_list = sorted(list(self.currency_set))
-
+        print(self.currency_list)
         return self.currency_list
 
 
@@ -70,18 +75,21 @@ class Crawler:
         return self.currency_list
 
     def run(self):
+        self.get_daily()
+        '''
         self.get_options()
         idx = self.select_option()
         self.crawl_rates(idx)
-        self.get_last_rate()
+        self.get_last_rate()'''
 
-
+##### Non-GUI logic
     def select_option(self):
         for el in self.currency_list:
             print(self.currency_list.index(el), ' ', el[0], ' -- ', el[1])
         idx = int(input('Pick one: '))
 
         return idx
+#####
 
     def crawl_rates(self, idx):
         print('called with ', idx)
