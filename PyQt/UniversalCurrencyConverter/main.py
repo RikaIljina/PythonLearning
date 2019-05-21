@@ -11,6 +11,7 @@ class MainWindow(QtWidgets.QMainWindow):
         super().__init__(parent)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        self.setWindowTitle('EUR Currency Converter')
         self.my_crawler = Crawler()
         self.default_label = '[choose a currency]'
         self.current_value = float()
@@ -23,16 +24,17 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.ui.label_chosen_currency.setText(self.default_label)
 
-        self.ui.comboBox_options.currentIndexChanged.connect(self.update_currency_infos)
+        self.ui.comboBox_options.currentIndexChanged.connect(self.update_currency_display)
         self.ui.pushButton.clicked.connect(self.crawl_rates)
 
+        # TODO: fix weird float behaviour on entry!
         self.ui.doubleSpinBox_eur.valueChanged.connect(self.calc_currency)
         self.ui.doubleSpinBox_currency.valueChanged.connect(self.calc_eur)
 
     def get_option_list(self):
         return [str(el) for el in self.my_crawler.return_options()]
 
-    def update_currency_infos(self):
+    def update_currency_display(self):
         idx = self.ui.comboBox_options.currentIndex()
         # ignore first entry (division line)
         if idx != 0:
@@ -44,11 +46,11 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.ui.label_chosen_currency.setText(chosen_currency)
 
+        # keep EUR rate if it has been changed
         if self.ui.doubleSpinBox_eur.value() > 1 or self.ui.doubleSpinBox_eur.value() < 1:
             self.calc_currency()
         else:
             self.ui.doubleSpinBox_currency.setValue(self.current_value)
-
 
     def crawl_rates(self):
         # fill dropdown with currencies
