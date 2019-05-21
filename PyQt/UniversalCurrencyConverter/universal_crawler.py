@@ -13,9 +13,15 @@ class Crawler:
                             'html/'
         self.base = 'https://sdw.ecb.europa.eu/curConverter.do?sourceAmount=100.0&sourceCurrency=RUB' \
                     '&targetCurrency=EUR&inputDate=18-05-2019&submitConvert.x=55&submitConvert.y=3'
+
+        # website to crawl for daily rates
         self.daily = 'https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml?b4ec694053eb4cd92b7cbc7345129c0e'
+
         self.currency_set = set()
+
+        # tuples with (currency abbreviation, rate)
         self.currency_list = []
+
         self.chosen_currency = 'sek.xml'
         self.all_rates = []
         self.last_rate = 0
@@ -23,38 +29,43 @@ class Crawler:
         self.xml_content = ''
 
     def return_options(self):
-        return self.currency_list
+        try:
+            self.get_daily()
+            return [entry[0] for entry in self.currency_list]
+        except:
+            print('error getting rates (in get_daily())')
+            return []
 
-    def return_info(self):
-        pass
-        #return self.last_rate, self.last_date
+    def return_date(self):
+        return self.last_date
+
+    def return_rates(self, idx):
+        return self.currency_list[idx][1]
 
     def get_daily(self):
-        #all_rates = []
         data = requests.get(self.daily)
         print(data.status_code)
         xml_file = BeautifulSoup(data.text, 'xml')
 
         all_cubes = xml_file.find('gesmes:Envelope')
-        print(all_cubes.Cube.Cube['time'])
+        self.last_date = all_cubes.Cube.Cube['time']
 
         for e in all_cubes.Cube.Cube.findAll('Cube'):
-            print(type(e))
-            print(e['currency'])
+            self.currency_set.add((e['currency'], e['rate']))
 
-        for entry in xml_file.findAll('Cube'):
-            if entry.get('currency'):
-                print(entry)
-                self.all_rates.append((entry['currency'], entry['rate']))
-                self.currency_set.add(entry['currency'])
-            elif entry.get('time'):
-                print(entry)
-                self.last_date = entry['time']
-
-        print(self.all_rates)
         self.currency_list = sorted(list(self.currency_set))
         print(self.currency_list)
-        return self.currency_list
+        return
+
+
+        # for entry in xml_file.findAll('Cube'):
+        #     if entry.get('currency'):
+        #         print(entry)
+        #         self.all_rates.append((entry['currency'], entry['rate']))
+        #         self.currency_set.add(entry['currency'])
+        #     elif entry.get('time'):
+        #         print(entry)
+        #         self.last_date = entry['time']
 
 
     def get_options(self):
