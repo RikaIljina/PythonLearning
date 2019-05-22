@@ -32,7 +32,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.doubleSpinBox_currency.valueChanged.connect(self.calc_eur)
 
     def get_option_list(self):
-        return [str(el) for el in self.my_crawler.return_options()]
+        return self.my_crawler.return_options()
 
     def update_currency_display(self):
         idx = self.ui.comboBox_options.currentIndex()
