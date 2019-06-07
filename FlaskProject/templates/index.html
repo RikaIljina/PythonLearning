@@ -14,12 +14,46 @@
         <span> {{ item }} </span>
         {% endfor %}
         <form action="" method="POST">
-            <input type="text" class="entry" name="StringToConvert"> <br>
-            <input type="submit" class="button" name="tl" value="To lowercase">
-            <input type="submit" class="button" name="tu" value="To uppercase">
+            <label for="string">Enter string:</label>
+            <input type="text" class="entry" id="string" name="StringToConvert" value="{{orig}}" /> <br>
+            <input type="submit" class="button" name="tl" value="To lowercase" />
+            <input type="submit" class="button" name="tu" value="To uppercase" />
         </form>
         Your string: <br>
+        {% if stc != None: %}
         {{ stc }}
+        {% else: %}
+        Please enter a string to convert!
+        {% endif %}
+<br><br>
+
+<table>
+	<tr>
+		<td>cat1</td>
+		<td>cat2</td>
+		<td>cat3</td>
+		<td>cat4</td>
+	</tr>
+	<tr>
+		<td>4</td>
+		<td>5</td>
+		<td>3</td>
+		<td>4</td>
+	</tr>
+	<tr>
+		<td>1</td>
+		<td>2</td>
+		<td>3</td>
+		<td>4</td>
+	</tr>
+	<tr>
+		<td>5</td>
+		<td>6</td>
+		<td>7</td>
+		<td>7</td>
+	</tr>
+
+</table>
     </p>
 
 {% endblock %}

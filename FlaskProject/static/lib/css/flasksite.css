@@ -38,3 +38,19 @@ nav a {    display: block;    float: left;
 width: 330px;
 height: 60px;
 }
+
+label {
+ font-weight: 200;
+ }
+
+table{
+ width: 80%;
+  border: 1px solid black;
+}
+
+th, td {
+
+ padding:20px;
+ border-spacing: 10px;
+ text-align: center;
+}

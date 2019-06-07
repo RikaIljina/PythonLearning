@@ -14,7 +14,8 @@ def hello():
             string_to_convert = str(request.form['StringToConvert']).upper()
     else:
         string_to_convert = None
-    return render_template('index.html', name=name, stc=string_to_convert, items=all_things)
+    orig = request.form.get('StringToConvert')
+    return render_template('index.html', name=name, stc=string_to_convert, items=all_things, orig=orig)
 
 @app.route("/test")
 def test():
