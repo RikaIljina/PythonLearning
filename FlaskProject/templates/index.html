@@ -1,0 +1,59 @@
+{% extends "layouts/main.html" %}
+
+ {% block content %}
+    <p id="UpperTitle">
+        Das ist meine erste <strong class="redword">Flask-Seite</strong>.
+    </p>
+    <p>
+        <span class="class1">Das ist ihr <strong class="redword">Inhalt</strong></span>.
+    </p>
+    <p>
+        Das ist einfach nur Text. blablabla <br>
+        Hallo {{ name }}! <br>
+        {% for item in items %}
+        <span> {{ item }} </span>
+        {% endfor %}
+        <form action="" method="POST">
+            <label for="string">Enter string:</label>
+            <input type="text" class="entry" id="string" name="StringToConvert" value="{{orig}}" /> <br>
+            <input type="submit" class="button" name="tl" value="To lowercase" />
+            <input type="submit" class="button" name="tu" value="To uppercase" />
+        </form>
+        Your string: <br>
+        {% if stc != None: %}
+        {{ stc }}
+        {% else: %}
+        Please enter a string to convert!
+        {% endif %}
+<br><br>
+
+<table>
+	<tr>
+		<td>cat1</td>
+		<td>cat2</td>
+		<td>cat3</td>
+		<td>cat4</td>
+	</tr>
+	<tr>
+		<td>4</td>
+		<td>5</td>
+		<td>3</td>
+		<td>4</td>
+	</tr>
+	<tr>
+		<td>1</td>
+		<td>2</td>
+		<td>3</td>
+		<td>4</td>
+	</tr>
+	<tr>
+		<td>5</td>
+		<td>6</td>
+		<td>7</td>
+		<td>7</td>
+	</tr>
+
+</table>
+    </p>
+
+{% endblock %}

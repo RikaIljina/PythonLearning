@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+        <link rel="stylesheet" type="text/css" href="././static/lib/css/skeleton.css?q=1280549780" media="screen" />
+    <link rel="stylesheet" type="text/css" href="././static/lib/css/normalize.css?q=1280549780" media="screen" />
+    <link rel="stylesheet" type="text/css" href="././static/lib/css/flasksite.css?q=1280549761" media="screen" />
+</head>
+<body>
+<div class="container">
+
+    <nav class="navigation">
+        <a href="/">Home</a>
+        <a href="javascript:history.back()">Back</a>
+        <a href="test">About</a>
+    </nav>
+    <br><br>
+    {% block content %}{% endblock %}
+
+</div>
+</body>
+</html>
